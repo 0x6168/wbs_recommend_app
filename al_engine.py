@@ -1,6 +1,7 @@
 
 import streamlit as st
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
 
 url_links = './data/links.csv'
@@ -31,7 +32,6 @@ def recommend_popular_movies(n, df, weight_counts):
         print("Weight must be in [0, 1]")
 
     # Scaling of the data
-    from sklearn.preprocessing import MinMaxScaler
     my_scaler = MinMaxScaler().set_output(transform="pandas")
     my_scaler.fit(df)
     df1 = my_scaler.transform(df)
@@ -39,10 +39,18 @@ def recommend_popular_movies(n, df, weight_counts):
     col_name = f"lin. {weight_counts*100}%"
     df1[col_name] = weight_counts * df1['rating_count'] + \
         (1 - weight_counts) * df1['avg_rating']
-    df1 = df1.merge(movies_df, how="left", on='movieId')[['title', 'genres']]
-    
-    return df1.head(n) #.sort_values(by=col_name, ascending=False).head(n)
+    df1 = df1.merge(movies_df, how="left", on='movieId')#[['title', 'genres']]
+    df1 = df1.merge(links_df, how="left", on='movieId')
+    df1 = df1.head(n)
+    tmdb_list = df1['tmdbId'].tolist()
+  
+    return tmdb_list
 
+
+
+
+# file_path = 2AlvHCeaZtFeR2H0IDoa2BmXOyK.jpg
+# url_poster = f"https://image.tmdb.org/t/p/w500/{file_path}"
 # kids 
 
 popularity_kids = kids_df[['movieId', 'rating']].groupby(
@@ -66,6 +74,9 @@ def recommend_popular_movies_kids(n, df, weight_counts):
     col_name = f"lin. {weight_counts*100}%"
     df1[col_name] = weight_counts * df1['rating_count'] + \
         (1 - weight_counts) * df1['avg_rating']
-    df1 = df1.merge(movies_df, how="left", on='movieId')[['title', 'genres']]
-    
-    return df1.head(n) #.sort_values(by=col_name, ascending=False).head(n)
+    df1 = df1.merge(movies_df, how="left", on='movieId')
+    df1 = df1.merge(links_df, how="left", on='movieId')
+    df1 = df1.head(n)
+    tmdb_list_kids = df1['tmdbId'].tolist()
+    return tmdb_list_kids
+  

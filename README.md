@@ -16,5 +16,6 @@ Movie posters for recommended movies are dsplayed via API from tmdb.
   
 Second part: customized, through input of userId recommendations are made on the basis of what the user liked before.
 Furthermore recommendations can be filtered by genre and decade.
+For the second part we used [Surprise] (https://surpriselib.com/), the python scikit for building and analyzing recommender systems that deal with explicit rating: data.
 
-## Recommendation functions
+
